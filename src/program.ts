@@ -19,17 +19,42 @@ export default class Program {
 
     async run() {
         await this.printConmpilerMessage();
+        let variables: Record<string, any> = {};
+        let showDebugInfo = false;
         while(true) {
             let line: string = await this.input.read('> ');
             
-            if (line === 'exit' || line === 'exit;') {
+            if (line === '#exit') {
                 this.output.write('Bye!');
                 break;
+            }
+
+            if(line === '#clear') {
+                variables = {};
+                let lines = process.stdout.getWindowSize()[1];
+                for(let i = 0; i < lines; i++) {
+                    console.log('\r\n');
+                }
+                continue;
+            }
+
+            if(line === '#showDebugInfo') {
+                showDebugInfo = true;
+                console.log('Showing debug info now!');
+                continue;
+            }
+
+            if(line === '#hideDebugInfo') {
+                showDebugInfo = false;
+                console.log('Hiding debug info now!');
+                continue;
             }
             
             const parser = new Parser(line);
             const tree = parser.parse();
-            this.prettyPrintSyntaxNode(tree.root);
+            if(showDebugInfo) {
+                this.prettyPrintSyntaxNode(tree.root);
+            }
 
             let errors = parser.getErrors();
             if (errors.length > 0) {
@@ -37,8 +62,21 @@ export default class Program {
                     this.output.writeLine(chalk.red(error));
                 });
             } else {
-                let value = (new ExpressionEvaluator(tree.root)).evaluate();
-                this.output.writeLine(chalk.green(`Expression evaluated to: ${chalk.bold(value)}`))
+                let evaluator = new ExpressionEvaluator(tree.root);
+                evaluator.setVariables(variables);
+                try {
+                    let value = evaluator.evaluate();
+                    this.output.writeLine(chalk.green(`Expression evaluated to: ${chalk.bold(value)}`))
+                    variables = evaluator.getVariables();
+                } catch (e) {
+                    this.output.writeLine(chalk.red(e));
+                }
+                
+
+                if (showDebugInfo) {
+                    console.log('========= VARIABLES ========');
+                    console.log(variables);
+                }
             }
 
             

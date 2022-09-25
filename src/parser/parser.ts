@@ -1,23 +1,32 @@
 import { LexicalAnalyser, SyntaxKind, SyntaxToken } from "@balance/lexer";
-import { BinaryExpressionSyntax, ExpressionSyntax, LiteralExpressionSyntax, ParenthesizedExpressionSyntax, SyntaxTree } from "@balance/syntax-tree";
+import { BinaryExpressionSyntax, ExpressionSyntax, LiteralExpressionSyntax, ParenthesizedExpressionSyntax, SyntaxTree, VariableAssignmentSyntax } from "@balance/syntax-tree";
 import SyntaxFacts from "./syntax-facts";
 
 export default class Parser {
     protected tokens: Array<SyntaxToken> = [];
     protected position: number = 0;
     protected errors: Array<string> = [];
+    protected variables: Record<string, any> = {};
 
     constructor(public text: string){
         const lexer = new LexicalAnalyser(text);
         let token: SyntaxToken;
         do {
             token = lexer.nextToken();
-            if (token.getKind() !== SyntaxKind.BadToken && token.getKind() !== SyntaxKind.WhiteSpaceToken) {
+            if (
+                token.getKind() !== SyntaxKind.BadToken && 
+                token.getKind() !== SyntaxKind.WhiteSpaceToken
+            ) {
                 this.tokens.push(token);
+            }
+
+            if (token.getKind() === SyntaxKind.AlphaNumericToken) {
+                this.variables[token.getValue()] = 1;
             }
         } while(token.getKind() !== SyntaxKind.EndOfFileToken);
 
         this.errors = [...lexer.getErrors()];
+        this.variables = {...lexer.getVariables()};
     }
 
     public getErrors = (): Array<string> => this.errors;
@@ -49,6 +58,7 @@ export default class Parser {
             return this.next();
         }
 
+        console.log(kind, current);
         this.errors.push(`Error: Unexpected token <${current.getKind()}> at position: ${current.getPosition()}. Expected <${kind}>!`);
 
         // Fabricating a custom token because the tokens do not match!
@@ -73,6 +83,7 @@ export default class Parser {
         return left;
     }
     private parsePrimaryExpression = () : ExpressionSyntax => {        
+        
         if (this.current().getKind() === SyntaxKind.OpenParenthesisToken) {
             const left = this.next();
             const expression = this.parseExpression();
@@ -81,6 +92,21 @@ export default class Parser {
             return new ParenthesizedExpressionSyntax(left, expression, right);
         }
 
+        if (this.current().getKind() === SyntaxKind.AlphaNumericToken) {
+            const left = this.next();
+            const operator = this.next();
+            const right = this.next();
+
+            switch(operator.getKind()) {
+                case SyntaxKind.EqualsToken:
+                    return new VariableAssignmentSyntax(left, right);
+                default:
+                    return new BinaryExpressionSyntax(left, operator, right);
+            }
+
+            
+        }
+        
         const numberToken = this.match(SyntaxKind.NumberToken);
         return new LiteralExpressionSyntax(numberToken);
     }

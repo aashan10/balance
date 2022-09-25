@@ -2,8 +2,10 @@ enum SyntaxKind {
     // Tokens
     BadToken = 'BadToken',
     EndOfFileToken = 'EndOfFileToken',
+    EndOfLineToken = 'EndOfLineToken',
     WhiteSpaceToken = 'WhiteSpaceToken',
     NumberToken = 'NumberToken',
+    AlphaNumericToken = 'AlphaNumericToken',
 
     // Operators
     PlusToken = 'PlusToken',
@@ -13,11 +15,13 @@ enum SyntaxKind {
     OpenParenthesisToken = 'OpenParenthesisToken',
     CloseParenthesisToken = 'CloseParenthesisToken',
     PercentageToken = 'PercentageToken',
+    EqualsToken = 'EqualsToken',
 
     // Expressions
     BinaryExpression = 'BinaryExpression',
     ParenthesizedExpression = 'ParenthesizedExpression',
-    LiteralExpression = 'LiteralExpression'
+    LiteralExpression = 'LiteralExpression',
+    VariableAssignmentExpression = 'VariableAssignmentExpression'
 }
 
 export default SyntaxKind;

@@ -2,20 +2,37 @@ import { SyntaxKind } from "@balance/lexer";
 import { ExpressionSyntax } from "@balance/syntax-tree";
 
 export default class ExpressionEvaluator {
+    protected variables: Record<string, any> = {};
     constructor(protected root: ExpressionSyntax) {}
 
-    public evaluate = (): number => {
+    public getVariables = () => this.variables;
+    public setVariables = (variables: Record<string, any>) => this.variables = variables;
+
+    public evaluate = (): any => {
         return this.evaluateExpression(this.root);
     }
 
-    public evaluateExpression = (root: ExpressionSyntax): number => {
+    public evaluateExpression = (root: ExpressionSyntax): any => {
         switch(root.getKind()) {
+            case SyntaxKind.AlphaNumericToken:
+                // @ts-ignore
+                const name = root.getText();
+                // @ts-ignore
+                const position = root.getPosition();
+                if (this.variables[name] !== undefined) {
+                    return this.variables[name];
+                }
+                throw new Error(`Undefined variable ${name} at position ${position}`);
             case SyntaxKind.LiteralExpression:
                 // @ts-ignore
                 return root.getToken().getValue();
             case SyntaxKind.ParenthesizedExpression:
                 // @ts-ignore
                 return this.evaluateExpression(root.getExpression());
+            case SyntaxKind.VariableAssignmentExpression:
+                // @ts-ignore
+                this.variables[root.getVaraible().getText()] = root.getValue().getValue(); 
+                break;
             case SyntaxKind.BinaryExpression:
                 // @ts-ignore
                 const left = root.getLeft();

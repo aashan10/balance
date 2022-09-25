@@ -13,6 +13,7 @@ export default class SyntaxToken extends SyntaxNode {
     }
 
     public getKind = () => this.kind;
+    public getText = () => this.text;
     public getPosition = () => this.position;
     public getValue = () => this.value;
     public getChildren = () : SyntaxNode[] => [];

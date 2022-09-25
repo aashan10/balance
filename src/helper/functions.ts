@@ -6,3 +6,7 @@ export const isWhiteSpace = (char: string): boolean => {
     const regex = new RegExp('\\s', 'g');
     return regex.test(char);
 }
+
+export const isAlphaNumeric = (char:string): boolean => {
+    return /[A-Za-z0-9_]+/g.test(char);
+}

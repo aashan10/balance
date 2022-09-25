@@ -1,4 +1,4 @@
-import { isDigit, isWhiteSpace } from "@balance/helper";
+import { isAlphaNumeric, isDigit, isWhiteSpace } from "@balance/helper";
 import SyntaxKind from "./syntax-kind";
 import SyntaxToken from "./syntax-token";
 
@@ -6,23 +6,30 @@ export default class LexicalAnalyser {
     
     protected errors: Array<string> = [];
     protected position: number = 0;
+    protected variables: Record<string, any> = {};
 
     constructor(protected text: string){
         
     }
 
     public getErrors = () => this.errors;
+    public getVariables = () => this.variables;
     public getPosition = () => this.position;
     
     public current = () : string => {
-        if (this.position >= this.text.length) {
-            return '\0';
-        }
-
-        return this.text[this.position];
+        return this.peek(0);
     }
 
     public next = (): void => {this.position++;}
+
+    public peek = (offset: number) => {
+        const position = this.position + offset;
+        if (position >= this.text.length) {
+            return '\0';
+        }
+
+        return this.text[position];
+    }
 
     public nextToken = () => {
         if (this.position >= this.text.length) {
@@ -49,6 +56,15 @@ export default class LexicalAnalyser {
             }
             const text = this.text.substring(start, this.position);
             return new SyntaxToken(SyntaxKind.WhiteSpaceToken, start, text, text);
+        }
+
+        if(isAlphaNumeric(this.current())) {
+            const start = this.position;
+            while(isAlphaNumeric(this.current())) {
+                this.next();
+            }
+            const text = this.text.substring(start, this.position);
+            return new SyntaxToken(SyntaxKind.AlphaNumericToken, start, text, text);
         }
 
         const current = this.current();
@@ -80,6 +96,14 @@ export default class LexicalAnalyser {
                 return token;
             case '%':
                 token = new SyntaxToken(SyntaxKind.PercentageToken, this.position, '%', null);
+                this.next();
+                return token;
+            case '=':
+                token = new SyntaxToken(SyntaxKind.EqualsToken, this.position, '=', null);
+                this.next();
+                return token;
+            case ';':
+                token = new SyntaxToken(SyntaxKind.EndOfLineToken, this.position, ';', null);
                 this.next();
                 return token;
             default:

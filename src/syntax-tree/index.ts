@@ -10,12 +10,14 @@ import SyntaxNode from './nodes/syntax-node';
 
 // Tree
 import SyntaxTree from './tree';
+import VariableAssignmentSyntax from './syntax/variable-assignment-syntax';
 
 export {
     BinaryExpressionSyntax,
     ExpressionSyntax,
     LiteralExpressionSyntax,
     ParenthesizedExpressionSyntax,
+    VariableAssignmentSyntax,
 
     SyntaxNode,
     SyntaxTree
