@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "ES5",
+    "module": "CommonJS",
+    "baseUrl": "./",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@balance/evaluator": ["src/evaluator/index"],
+      "@balance/helper": ["src/helper/index"],
+      "@balance/lexer": ["src/lexer/index"],
+      "@balance/parser": ["src/parser/index"],
+      "@balance/syntax-tree": ["src/syntax-tree/index"],
+      "@balance/io": ["src/io/index"],
+      "@balance/*": ["src/*"]
+    }
+  }
+}
