@@ -21,7 +21,8 @@ enum SyntaxKind {
     BinaryExpression = 'BinaryExpression',
     ParenthesizedExpression = 'ParenthesizedExpression',
     LiteralExpression = 'LiteralExpression',
-    VariableAssignmentExpression = 'VariableAssignmentExpression'
+    VariableAssignmentExpression = 'VariableAssignmentExpression',
+    UnaryExpression = "UnaryExpression"
 }
 
 export default SyntaxKind;

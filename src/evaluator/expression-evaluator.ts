@@ -1,4 +1,4 @@
-import { SyntaxKind } from "@balance/lexer";
+import { SyntaxKind, SyntaxToken } from "@balance/lexer";
 import { ExpressionSyntax } from "@balance/syntax-tree";
 
 export default class ExpressionEvaluator {
@@ -33,6 +33,21 @@ export default class ExpressionEvaluator {
                 // @ts-ignore
                 this.variables[root.getVaraible().getText()] = root.getValue().getValue(); 
                 break;
+            case SyntaxKind.UnaryExpression:
+                // @ts-ignore
+                // @ts-ignore
+                const operand = this.evaluateExpression(root.getOperand());
+                // @ts-ignore
+                const unaryOperator = root.getOperator();
+                
+                switch(unaryOperator.getKind()){
+                    case SyntaxKind.PlusToken:
+                        return operand;
+                    case SyntaxKind.MinusToken:
+                        return - operand;
+                    default:
+                        throw new Error(`Unexpected unary operator ${unaryOperator.getKind()} on position ${unaryOperator.getPosition()}`);
+                }
             case SyntaxKind.BinaryExpression:
                 // @ts-ignore
                 const left = root.getLeft();
@@ -53,7 +68,7 @@ export default class ExpressionEvaluator {
                     case SyntaxKind.PercentageToken:
                         return this.evaluateExpression(left) % this.evaluateExpression(right);
                     default:
-                        throw new Error(`Unexpected node ${root.getKind()}!`);
+                        throw new Error(`Unexpected node ${operator.getKind()}!`);
                 }
             default:
                 throw new Error(`Unexpected node ${root.getKind()}!`);

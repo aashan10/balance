@@ -1,5 +1,5 @@
 import { LexicalAnalyser, SyntaxKind, SyntaxToken } from "@balance/lexer";
-import { BinaryExpressionSyntax, ExpressionSyntax, LiteralExpressionSyntax, ParenthesizedExpressionSyntax, SyntaxTree, VariableAssignmentSyntax } from "@balance/syntax-tree";
+import {UnaryExpressionSyntax, BinaryExpressionSyntax, ExpressionSyntax, LiteralExpressionSyntax, ParenthesizedExpressionSyntax, SyntaxTree, VariableAssignmentSyntax } from "@balance/syntax-tree";
 import SyntaxFacts from "./syntax-facts";
 
 export default class Parser {
@@ -66,7 +66,18 @@ export default class Parser {
     }
 
     private parseExpression = (parentPrecedence: number = 0) : ExpressionSyntax => {
-        let left = this.parsePrimaryExpression();
+        let left: ExpressionSyntax;
+
+        let unaryOperatorPrecedence = SyntaxFacts.getUnaryOperatorPrecedence(this.current().getKind());
+
+        if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence) {
+            let operatorToken = this.next();
+            let operand = this.parseExpression();
+            left = new UnaryExpressionSyntax(operatorToken, operand);
+        } else {
+            left = this.parsePrimaryExpression();
+        }
+
         let precedence:number ;
         while(true) {
             precedence = SyntaxFacts.getBinaryOperatorPrecedence(this.current().getKind());

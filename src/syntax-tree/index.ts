@@ -11,8 +11,10 @@ import SyntaxNode from './nodes/syntax-node';
 // Tree
 import SyntaxTree from './tree';
 import VariableAssignmentSyntax from './syntax/variable-assignment-syntax';
+import UnaryExpressionSyntax from './syntax/unary-expression-syntax';
 
 export {
+    UnaryExpressionSyntax,
     BinaryExpressionSyntax,
     ExpressionSyntax,
     LiteralExpressionSyntax,

@@ -15,4 +15,14 @@ export default class SyntaxFacts {
                 return 0;
         }
     }
+
+    static getUnaryOperatorPrecedence = (kind: SyntaxKind) : number => {
+        switch(kind) {
+            case SyntaxKind.PlusToken:
+            case SyntaxKind.MinusToken:
+                return 3;
+            default:
+                return 0;
+        }
+    }
 }
