@@ -1,4 +1,4 @@
-import { SyntaxKind, SyntaxToken } from "@balance/lexer";
+import { SyntaxKind, SyntaxToken } from "@balance/syntax";
 import SyntaxNode from "../nodes/syntax-node";
 import ExpressionSyntax from "./expression-syntax";
 

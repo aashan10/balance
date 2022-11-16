@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "repl": "tsc && tspath -f && node build/index.js"
+    "repl": "tsc && tspath -f && node make-executable.js && node build/index.js",
+    "build": "tsc && tspath -f && node make-executable.js"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +18,8 @@
   },
   "dependencies": {
     "chalk": "^4.1.2"
+  },
+  "bin": {
+    "execute": "build/index.js"
   }
 }

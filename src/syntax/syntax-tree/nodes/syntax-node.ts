@@ -1,4 +1,4 @@
-import {SyntaxKind} from "@balance/lexer";
+import {SyntaxKind} from "@balance/syntax";
 
 export default abstract class SyntaxNode {
     

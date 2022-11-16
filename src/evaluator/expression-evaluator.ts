@@ -1,5 +1,4 @@
-import { SyntaxKind, SyntaxToken } from "@balance/lexer";
-import { ExpressionSyntax } from "@balance/syntax-tree";
+import { SyntaxKind,  ExpressionSyntax } from "@balance/syntax";
 
 export default class ExpressionEvaluator {
     protected variables: Record<string, any> = {};

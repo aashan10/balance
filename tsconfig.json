@@ -13,9 +13,7 @@
     "paths": {
       "@balance/evaluator": ["src/evaluator/index"],
       "@balance/helper": ["src/helper/index"],
-      "@balance/lexer": ["src/lexer/index"],
-      "@balance/parser": ["src/parser/index"],
-      "@balance/syntax-tree": ["src/syntax-tree/index"],
+      "@balance/syntax": ["src/syntax/index"],
       "@balance/io": ["src/io/index"],
       "@balance/*": ["src/*"]
     }

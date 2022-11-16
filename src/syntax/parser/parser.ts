@@ -1,5 +1,15 @@
-import { LexicalAnalyser, SyntaxKind, SyntaxToken } from "@balance/lexer";
-import {UnaryExpressionSyntax, BinaryExpressionSyntax, ExpressionSyntax, LiteralExpressionSyntax, ParenthesizedExpressionSyntax, SyntaxTree, VariableAssignmentSyntax } from "@balance/syntax-tree";
+import { 
+    LexicalAnalyser, 
+    SyntaxKind, 
+    SyntaxToken, 
+    UnaryExpressionSyntax, 
+    BinaryExpressionSyntax, 
+    ExpressionSyntax, 
+    LiteralExpressionSyntax, 
+    ParenthesizedExpressionSyntax, 
+    SyntaxTree, 
+    VariableAssignmentSyntax 
+} from "@balance/syntax";
 import SyntaxFacts from "./syntax-facts";
 
 export default class Parser {
@@ -58,7 +68,6 @@ export default class Parser {
             return this.next();
         }
 
-        console.log(kind, current);
         this.errors.push(`Error: Unexpected token <${current.getKind()}> at position: ${current.getPosition()}. Expected <${kind}>!`);
 
         // Fabricating a custom token because the tokens do not match!

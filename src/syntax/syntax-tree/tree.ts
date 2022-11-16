@@ -1,4 +1,4 @@
-import { SyntaxToken } from "@balance/lexer";
+import { SyntaxToken } from "@balance/syntax";
 import ExpressionSyntax from "./syntax/expression-syntax";
 
 export default class SyntaxTree {
